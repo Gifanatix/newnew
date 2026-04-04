@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - 'release/**'
+      - 'copilot/**'
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repo-standards:
+    name: Repository standards
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required repository files
+        run: |
+          set -euo pipefail
+          required_files=(
+            ".github/CODEOWNERS"
+            ".github/pull_request_template.md"
+            ".github/dependabot.yml"
+            ".github/workflows/codeql.yml"
+            ".github/workflows/dependency-review.yml"
+            ".github/workflows/secret-scan.yml"
+            ".github/workflows/container-scan.yml"
+            ".github/workflows/dast.yml"
+            "SECURITY.md"
+            "README.md"
+          )
+
+          for file in "${required_files[@]}"; do
+            test -f "$file" || { echo "Missing required file: $file"; exit 1; }
+          done
+
+  app-quality-gates:
+    name: Application quality gates
+    runs-on: ubuntu-latest
+    needs: repo-standards
+    if: ${{ hashFiles('package.json') != '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Verify required npm scripts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const scripts = pkg.scripts || {};
+          const required = [
+            'lint',
+            'typecheck',
+            'build',
+            'test',
+            'test:coverage',
+            'test:integration',
+            'test:e2e',
+          ];
+          const missing = required.filter((name) => !scripts[name]);
+          if (missing.length) {
+            console.error(`Missing required npm scripts: ${missing.join(', ')}`);
+            process.exit(1);
+          }
+          NODE
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Production build
+        run: npm run build
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Coverage
+        run: npm run test:coverage
+
+      - name: Integration tests
+        run: npm run test:integration
+
+      - name: End-to-end tests
+        run: npm run test:e2e
+
+  db-migration-validation:
+    name: Database migration validation
+    runs-on: ubuntu-latest
+    needs: repo-standards
+    if: ${{ hashFiles('package.json') != '' && hashFiles('prisma/schema.prisma') != '' }}
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: nexus_ci
+          POSTGRES_USER: nexus_ci
+          POSTGRES_PASSWORD: nexus_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U nexus_ci -d nexus_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://nexus_ci:nexus_ci@localhost:5432/nexus_ci
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate migration command availability
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const scripts = pkg.scripts || {};
+          if (!scripts['db:migrate']) {
+            console.error('Missing required npm script: db:migrate');
+            process.exit(1);
+          }
+          NODE
+
+      - name: Run migrations
+        run: npm run db:migrate
