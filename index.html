@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESCP GREEN IP &mdash; Patent Licensing &amp; Investment Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #1a1a2e;
+      background: #fff;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; transition: color .2s; }
+    ul { list-style: none; }
+
+    /* ===== UTILITY ===== */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 96px 0; }
+    .section-label {
+      display: inline-block;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #10b981;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      color: #0f172a;
+    }
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: #64748b;
+      max-width: 640px;
+      line-height: 1.7;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: .95rem;
+      cursor: pointer;
+      transition: all .25s;
+      border: none;
+    }
+    .btn-primary { background: #10b981; color: #fff; }
+    .btn-primary:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(16,185,129,.3); }
+    .btn-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.4); }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+    .btn-dark { background: #0f172a; color: #fff; }
+    .btn-dark:hover { background: #1e293b; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15,23,42,.25); }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      transition: box-shadow .3s;
+    }
+    .nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,.06); }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 72px;
+    }
+    .nav-logo {
+      font-size: 1.25rem; font-weight: 800;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .nav-logo .icon {
+      width: 36px; height: 36px; background: linear-gradient(135deg, #10b981, #0ea5e9);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 800; font-size: .85rem;
+    }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a {
+      font-size: .9rem; font-weight: 500; color: #475569;
+      position: relative;
+    }
+    .nav-links a:hover { color: #10b981; }
+    .nav-links .btn { padding: 10px 24px; font-size: .85rem; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; }
+    .nav-toggle span { width: 24px; height: 2px; background: #0f172a; border-radius: 2px; transition: .3s; }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+      position: relative; overflow: hidden;
+      padding-top: 72px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -50%; right: -20%; width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(16,185,129,.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -30%; left: -10%; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(14,165,233,.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+      align-items: center; position: relative; z-index: 2;
+    }
+    .hero-content { color: #fff; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(16,185,129,.15);
+      border: 1px solid rgba(16,185,129,.3);
+      padding: 8px 16px; border-radius: 100px;
+      font-size: .8rem; font-weight: 500; color: #6ee7b7;
+      margin-bottom: 28px;
+    }
+    .hero-badge .dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+    .hero h1 {
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
+      font-weight: 800; line-height: 1.1; margin-bottom: 24px;
+    }
+    .hero h1 .highlight { color: #10b981; }
+    .hero p { font-size: 1.15rem; color: rgba(255,255,255,.7); max-width: 520px; margin-bottom: 40px; line-height: 1.7; }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex; gap: 48px; margin-top: 56px; padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+    .hero-stat-num { font-size: 2rem; font-weight: 800; color: #10b981; }
+    .hero-stat-label { font-size: .8rem; color: rgba(255,255,255,.5); margin-top: 4px; }
+
+    /* Hero Visual */
+    .hero-visual {
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-card {
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%; max-width: 440px;
+    }
+    .hero-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .hero-card-icon {
+      width: 48px; height: 48px; background: linear-gradient(135deg, #10b981, #0ea5e9);
+      border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem;
+    }
+    .hero-card-title { color: #fff; font-weight: 700; font-size: 1.1rem; }
+    .hero-card-sub { color: rgba(255,255,255,.5); font-size: .8rem; }
+    .hero-card-items { display: flex; flex-direction: column; gap: 16px; }
+    .hero-card-item {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 16px 18px; border-radius: 14px;
+      color: #fff; font-size: .9rem; font-weight: 500;
+    }
+    .hero-card-item .emoji { font-size: 1.3rem; }
+    .hero-card-item .tag {
+      margin-left: auto; font-size: .7rem; font-weight: 600;
+      padding: 4px 10px; border-radius: 100px;
+      background: rgba(16,185,129,.2); color: #6ee7b7;
+    }
+
+    /* ===== TECHNOLOGIES ===== */
+    .tech-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 28px; margin-top: 56px;
+    }
+    .tech-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 36px;
+      transition: all .3s;
+      position: relative; overflow: hidden;
+    }
+    .tech-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(0,0,0,.08);
+      border-color: #10b981;
+    }
+    .tech-card-icon {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 24px;
+    }
+    .tech-card:nth-child(1) .tech-card-icon { background: linear-gradient(135deg, #dcfce7, #bbf7d0); }
+    .tech-card:nth-child(2) .tech-card-icon { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+    .tech-card:nth-child(3) .tech-card-icon { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+    .tech-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; }
+    .tech-card p { font-size: .9rem; color: #64748b; line-height: 1.7; margin-bottom: 20px; }
+    .tech-card-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tech-tag {
+      font-size: .72rem; font-weight: 600; padding: 5px 12px;
+      border-radius: 100px; background: #f1f5f9; color: #475569;
+    }
+
+    /* ===== LICENSING ===== */
+    .licensing { background: #f8fafc; }
+    .license-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 28px; margin-top: 56px;
+    }
+    .license-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 40px 32px;
+      text-align: center;
+      transition: all .3s;
+      position: relative;
+    }
+    .license-card.featured {
+      border-color: #10b981;
+      box-shadow: 0 0 0 1px #10b981;
+    }
+    .license-card.featured::before {
+      content: 'Most Popular';
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: #10b981; color: #fff;
+      font-size: .72rem; font-weight: 700; padding: 5px 16px;
+      border-radius: 100px;
+    }
+    .license-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.08); }
+    .license-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+    .license-card .price { font-size: 2.5rem; font-weight: 800; color: #0f172a; margin: 20px 0 8px; }
+    .license-card .price-note { font-size: .8rem; color: #94a3b8; margin-bottom: 28px; }
+    .license-card ul { text-align: left; margin-bottom: 32px; }
+    .license-card li {
+      font-size: .88rem; color: #475569; padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .license-card li .check { color: #10b981; font-weight: 700; }
+    .license-card .btn { width: 100%; justify-content: center; }
+
+    /* ===== M&A / INVESTMENT ===== */
+    .mna-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center; margin-top: 56px;
+    }
+    .mna-features { display: flex; flex-direction: column; gap: 28px; }
+    .mna-feature {
+      display: flex; gap: 20px; align-items: flex-start;
+    }
+    .mna-feature-icon {
+      width: 48px; height: 48px; min-width: 48px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    }
+    .mna-feature h4 { font-weight: 700; margin-bottom: 6px; }
+    .mna-feature p { font-size: .88rem; color: #64748b; line-height: 1.6; }
+    .mna-visual {
+      background: linear-gradient(135deg, #0f172a, #1e3a5f);
+      border-radius: 24px; padding: 48px;
+      color: #fff; position: relative; overflow: hidden;
+    }
+    .mna-visual::after {
+      content: '';
+      position: absolute; top: -40%; right: -20%; width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(16,185,129,.2) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .mna-visual h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 16px; position: relative; z-index: 2; }
+    .mna-visual p { color: rgba(255,255,255,.6); font-size: .9rem; margin-bottom: 32px; position: relative; z-index: 2; line-height: 1.7; }
+    .mna-visual .btn { position: relative; z-index: 2; }
+    .mna-stat-row { display: flex; gap: 32px; margin-top: 32px; position: relative; z-index: 2; }
+    .mna-stat { text-align: center; }
+    .mna-stat-val { font-size: 1.75rem; font-weight: 800; color: #10b981; }
+    .mna-stat-lab { font-size: .75rem; color: rgba(255,255,255,.5); margin-top: 4px; }
+
+    /* ===== GLOBAL COVERAGE ===== */
+    .coverage { background: #f8fafc; }
+    .coverage-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 24px; margin-top: 56px;
+    }
+    .coverage-item {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+      transition: all .3s;
+    }
+    .coverage-item:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.06); }
+    .coverage-item .flag { font-size: 2.5rem; margin-bottom: 12px; }
+    .coverage-item h4 { font-weight: 700; font-size: .95rem; margin-bottom: 4px; }
+    .coverage-item p { font-size: .8rem; color: #64748b; }
+
+    /* ===== HOW IT WORKS ===== */
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 28px; margin-top: 56px;
+    }
+    .step {
+      text-align: center;
+      padding: 32px 20px;
+    }
+    .step-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem; color: #10b981;
+      background: #f0fdf4; border: 2px solid #10b981;
+      margin-bottom: 20px;
+    }
+    .step h4 { font-weight: 700; margin-bottom: 10px; }
+    .step p { font-size: .88rem; color: #64748b; line-height: 1.6; }
+
+    /* ===== CTA ===== */
+    .cta {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      text-align: center;
+      color: #fff;
+    }
+    .cta .section-title { color: #fff; }
+    .cta .section-subtitle { color: rgba(255,255,255,.6); margin: 0 auto 40px; }
+    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: #0f172a;
+      color: rgba(255,255,255,.5);
+      padding: 64px 0 32px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px; margin-bottom: 48px;
+    }
+    .footer-brand .nav-logo { margin-bottom: 16px; }
+    .footer-brand .nav-logo { color: #fff; }
+    .footer-brand p { font-size: .88rem; line-height: 1.7; max-width: 300px; }
+    .footer h5 {
+      font-size: .8rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #fff; margin-bottom: 20px;
+    }
+    .footer ul li { margin-bottom: 12px; }
+    .footer ul a { font-size: .88rem; color: rgba(255,255,255,.5); }
+    .footer ul a:hover { color: #10b981; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .82rem;
+    }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero p { margin: 0 auto 40px; }
+      .hero-buttons { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .hero-visual { margin-top: 48px; }
+      .tech-grid { grid-template-columns: repeat(2, 1fr); }
+      .license-grid { grid-template-columns: repeat(2, 1fr); }
+      .mna-grid { grid-template-columns: 1fr; }
+      .coverage-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.active {
+        display: flex; flex-direction: column;
+        position: absolute; top: 72px; left: 0; right: 0;
+        background: #fff; padding: 24px;
+        box-shadow: 0 16px 40px rgba(0,0,0,.1);
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+      }
+      .nav-toggle { display: flex; }
+      .section { padding: 64px 0; }
+      .hero h1 { font-size: 2rem; }
+      .hero-stats { gap: 24px; flex-wrap: wrap; }
+      .tech-grid, .license-grid { grid-template-columns: 1fr; }
+      .coverage-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .hero-buttons { flex-direction: column; }
+      .hero-buttons .btn { width: 100%; justify-content: center; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .coverage-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="icon">E</span>
+        ESCP GREEN IP
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#technologies">Technologies</a>
+        <a href="#licensing">Licensing</a>
+        <a href="#investment">Investment</a>
+        <a href="#how-it-works">Process</a>
+        <a href="#contact" class="btn btn-primary">Get in Touch</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          WIPO &bull; EPO &bull; Global Patent Protection
+        </div>
+        <h1>License <span class="highlight">GREEN</span> Energy Patents That Power the Future</h1>
+        <p>ESCP offers exclusive and non-exclusive licensing for breakthrough clean-energy technologies &mdash; urban biogas, compressed air motors, and modular energy systems &mdash; protected across Italy, EU, China, EAPO, and WIPO territories.</p>
+        <div class="hero-buttons">
+          <a href="#licensing" class="btn btn-primary">Explore Licenses &rarr;</a>
+          <a href="#investment" class="btn btn-outline">Investment &amp; M&amp;A</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">3</div>
+            <div class="hero-stat-label">Core Technologies</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">40+</div>
+            <div class="hero-stat-label">Countries Protected</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">5</div>
+            <div class="hero-stat-label">Patent Families</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <div class="hero-card-icon">&#9889;</div>
+            <div>
+              <div class="hero-card-title">Patent Portfolio</div>
+              <div class="hero-card-sub">ESCP Presidio Framework</div>
+            </div>
+          </div>
+          <div class="hero-card-items">
+            <div class="hero-card-item">
+              <span class="emoji">&#9851;</span>
+              Urban Biogas Conversion
+              <span class="tag">Active</span>
+            </div>
+            <div class="hero-card-item">
+              <span class="emoji">&#128168;</span>
+              Compressed Air Motor
+              <span class="tag">Active</span>
+            </div>
+            <div class="hero-card-item">
+              <span class="emoji">&#9889;</span>
+              Modular Energy Systems
+              <span class="tag">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TECHNOLOGIES ===== -->
+  <section class="section" id="technologies">
+    <div class="container">
+      <div class="section-label">Our Technologies</div>
+      <div class="section-title">Three Breakthrough Clean-Energy Innovations</div>
+      <div class="section-subtitle">Each technology is fully patented, commercially validated through the EUWEB Presidio framework, and ready for global deployment via licensing.</div>
+      <div class="tech-grid">
+
+        <div class="tech-card">
+          <div class="tech-card-icon">&#9851;</div>
+          <h3>Urban Biogas Conversion</h3>
+          <p>Proprietary system that converts municipal organic waste into clean biogas for distributed urban energy generation. Patented process delivers 40% higher yield than conventional anaerobic digestion.</p>
+          <div class="tech-card-tags">
+            <span class="tech-tag">Municipal Waste</span>
+            <span class="tech-tag">Distributed Energy</span>
+            <span class="tech-tag">EU &bull; WIPO</span>
+          </div>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-card-icon">&#128168;</div>
+          <h3>Compressed Air Motor</h3>
+          <p>Zero-emission compressed air engine technology for light transport and industrial applications. No battery degradation, instant refueling, and near-zero maintenance cost over lifecycle.</p>
+          <div class="tech-card-tags">
+            <span class="tech-tag">Zero Emission</span>
+            <span class="tech-tag">Transport &bull; Industrial</span>
+            <span class="tech-tag">Italy &bull; China &bull; EAPO</span>
+          </div>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-card-icon">&#9889;</div>
+          <h3>Modular Energy Systems</h3>
+          <p>Scalable, plug-and-play energy generation modules for off-grid and micro-grid deployments. Combines solar, storage, and smart management into standardized units.</p>
+          <div class="tech-card-tags">
+            <span class="tech-tag">Off-Grid</span>
+            <span class="tech-tag">Micro-Grid</span>
+            <span class="tech-tag">Global Patent</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LICENSING ===== -->
+  <section class="section licensing" id="licensing">
+    <div class="container">
+      <div style="text-align:center;">
+        <div class="section-label">Licensing Options</div>
+        <div class="section-title">Flexible Licensing for Every Market</div>
+        <div class="section-subtitle" style="margin:0 auto;">Choose the licensing model that fits your deployment strategy. All licenses include full technical documentation, implementation support, and IP protection.</div>
+      </div>
+      <div class="license-grid">
+
+        <div class="license-card">
+          <h3>Non-Exclusive License</h3>
+          <div class="price">Custom</div>
+          <div class="price-note">Per technology &bull; Per territory</div>
+          <ul>
+            <li><span class="check">&#10003;</span> Single technology access</li>
+            <li><span class="check">&#10003;</span> Defined territory rights</li>
+            <li><span class="check">&#10003;</span> Technical documentation</li>
+            <li><span class="check">&#10003;</span> Implementation guidance</li>
+            <li><span class="check">&#10003;</span> Annual renewal option</li>
+          </ul>
+          <a href="#contact" class="btn btn-dark">Request Quote</a>
+        </div>
+
+        <div class="license-card featured">
+          <h3>Exclusive Territory License</h3>
+          <div class="price">Custom</div>
+          <div class="price-note">Per technology &bull; Exclusive region</div>
+          <ul>
+            <li><span class="check">&#10003;</span> Exclusive market rights</li>
+            <li><span class="check">&#10003;</span> Full technology transfer</li>
+            <li><span class="check">&#10003;</span> On-site deployment support</li>
+            <li><span class="check">&#10003;</span> Sub-licensing rights</li>
+            <li><span class="check">&#10003;</span> Priority R&amp;D updates</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary">Request Quote</a>
+        </div>
+
+        <div class="license-card">
+          <h3>Strategic Partnership</h3>
+          <div class="price">Custom</div>
+          <div class="price-note">Multi-technology &bull; Joint venture</div>
+          <ul>
+            <li><span class="check">&#10003;</span> Multi-patent portfolio access</li>
+            <li><span class="check">&#10003;</span> Joint development rights</li>
+            <li><span class="check">&#10003;</span> Revenue sharing model</li>
+            <li><span class="check">&#10003;</span> Board advisory access</li>
+            <li><span class="check">&#10003;</span> Co-branding opportunity</li>
+          </ul>
+          <a href="#contact" class="btn btn-dark">Discuss Partnership</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== M&A / INVESTMENT ===== -->
+  <section class="section" id="investment">
+    <div class="container">
+      <div class="section-label">Investment &amp; M&amp;A</div>
+      <div class="section-title">Accelerate the Clean Energy Transition</div>
+      <div class="section-subtitle">ESCP is open to strategic investment, acquisition discussions, and joint ventures. Our Presidio framework ensures transparent valuation and structured deal flow.</div>
+      <div class="mna-grid">
+        <div class="mna-features">
+          <div class="mna-feature">
+            <div class="mna-feature-icon">&#128200;</div>
+            <div>
+              <h4>Structured Deal Room</h4>
+              <p>NDA-protected document access for qualified investors. Full patent portfolio details, financial projections, and market analysis available under agreement.</p>
+            </div>
+          </div>
+          <div class="mna-feature">
+            <div class="mna-feature-icon">&#127758;</div>
+            <div>
+              <h4>Global IP Protection</h4>
+              <p>Patents registered across Italy, EU (EPO), China (CNIPA), Eurasian Patent Organization (EAPO), and WIPO &mdash; providing robust international protection.</p>
+            </div>
+          </div>
+          <div class="mna-feature">
+            <div class="mna-feature-icon">&#129309;</div>
+            <div>
+              <h4>EUWEB Presidio Framework</h4>
+              <p>Valuation and governance structure developed through the University of Westminster business program, providing institutional credibility and clear IP asset management.</p>
+            </div>
+          </div>
+          <div class="mna-feature">
+            <div class="mna-feature-icon">&#128640;</div>
+            <div>
+              <h4>Consultation Booking</h4>
+              <p>Schedule a one-on-one session with our licensing and investment team. Discuss technology fit, territory availability, and partnership structures.</p>
+            </div>
+          </div>
+        </div>
+        <div class="mna-visual">
+          <h3>Portfolio at a Glance</h3>
+          <p>Three core technologies. Global patent protection. Clear licensing pathways. Whether you're an investor, manufacturer, or energy company &mdash; there's a structured path to partnership.</p>
+          <a href="#contact" class="btn btn-primary">Schedule Consultation &rarr;</a>
+          <div class="mna-stat-row">
+            <div class="mna-stat">
+              <div class="mna-stat-val">3</div>
+              <div class="mna-stat-lab">Patent Families</div>
+            </div>
+            <div class="mna-stat">
+              <div class="mna-stat-val">5+</div>
+              <div class="mna-stat-lab">Filing Jurisdictions</div>
+            </div>
+            <div class="mna-stat">
+              <div class="mna-stat-val">&#8734;</div>
+              <div class="mna-stat-lab">Scalability</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GLOBAL COVERAGE ===== -->
+  <section class="section coverage">
+    <div class="container">
+      <div style="text-align:center;">
+        <div class="section-label">Global Coverage</div>
+        <div class="section-title">Patent Protection Worldwide</div>
+        <div class="section-subtitle" style="margin:0 auto;">Our IP is strategically protected in the world's key markets and manufacturing regions.</div>
+      </div>
+      <div class="coverage-grid">
+        <div class="coverage-item">
+          <div class="flag">&#127470;&#127481;</div>
+          <h4>Italy</h4>
+          <p>Origin filing &bull; UIBM</p>
+        </div>
+        <div class="coverage-item">
+          <div class="flag">&#127466;&#127482;</div>
+          <h4>European Union</h4>
+          <p>EPO Regional Patent</p>
+        </div>
+        <div class="coverage-item">
+          <div class="flag">&#127464;&#127475;</div>
+          <h4>China</h4>
+          <p>CNIPA National Filing</p>
+        </div>
+        <div class="coverage-item">
+          <div class="flag">&#127758;</div>
+          <h4>EAPO &amp; WIPO</h4>
+          <p>Eurasian &bull; PCT International</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div style="text-align:center;">
+        <div class="section-label">How It Works</div>
+        <div class="section-title">From Inquiry to License in Four Steps</div>
+        <div class="section-subtitle" style="margin:0 auto;">A streamlined process to get you from first contact to a signed licensing agreement with full technical transfer.</div>
+      </div>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h4>Select Technology</h4>
+          <p>Browse our patent portfolio and choose the technology that fits your market and application.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h4>Request &amp; NDA</h4>
+          <p>Submit a licensing inquiry. We'll send an NDA and detailed technology documentation for review.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h4>Negotiate Terms</h4>
+          <p>Work with our team to define territory, exclusivity, pricing, and any joint development terms.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h4>License &amp; Deploy</h4>
+          <p>Sign the agreement, receive your license key and full technical package, and start deployment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="section cta" id="contact">
+    <div class="container">
+      <div class="section-label" style="color:#6ee7b7;">Ready to Start?</div>
+      <div class="section-title">Let's Power the Future Together</div>
+      <div class="section-subtitle">Whether you're looking to license a single technology, explore a strategic partnership, or discuss investment &mdash; we're ready to talk.</div>
+      <div class="cta-buttons">
+        <a href="mailto:info@escpgreenip.com" class="btn btn-primary">&#9993; Contact Us</a>
+        <a href="#licensing" class="btn btn-outline">View Licensing Options</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <span class="icon">E</span>
+            ESCP GREEN IP
+          </div>
+          <p>Licensing breakthrough clean-energy technologies to accelerate the global transition to sustainable power. Protected by international patents across 40+ countries.</p>
+        </div>
+        <div>
+          <h5>Technologies</h5>
+          <ul>
+            <li><a href="#technologies">Urban Biogas</a></li>
+            <li><a href="#technologies">Compressed Air Motor</a></li>
+            <li><a href="#technologies">Modular Energy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Licensing</h5>
+          <ul>
+            <li><a href="#licensing">Non-Exclusive</a></li>
+            <li><a href="#licensing">Exclusive Territory</a></li>
+            <li><a href="#licensing">Strategic Partnership</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#investment">Investment &amp; M&amp;A</a></li>
+            <li><a href="#how-it-works">Process</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 ESCP GREEN IP. All rights reserved.</span>
+        <span>Powered by EUWEB Presidio Framework</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Mobile menu toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Close mobile menu on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
