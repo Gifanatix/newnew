@@ -1,4 +1,4 @@
-// Colour & typography design tokens shared across all scenes
+// Color & typography design tokens shared across all scenes
 export const COLORS = {
   bg: "#0a0a14",
   bgCard: "#12122a",
